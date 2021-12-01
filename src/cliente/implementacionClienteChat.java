@@ -10,33 +10,32 @@ import interfacee.chatServidor;
 public class implementacionClienteChat extends UnicastRemoteObject implements chatCliente, Runnable{
 
 	chatServidor servidor;
-	public String nombre = null;
+	ClienteInfo cliente;
+	boolean bandera = true;
 	
 	
-	implementacionClienteChat(String nombre, chatServidor servidor) throws RemoteException {
-		this.nombre = nombre;
+	implementacionClienteChat(ClienteInfo cliente, chatServidor servidor) throws RemoteException {
+		this.cliente = cliente;
 		this.servidor = servidor;
-		servidor.registro(this);
+		this.cliente.imp = this;
+		servidor.registro(cliente);
 	}
 
 	@Override
 	public void run() {
-		Scanner s = new Scanner(System.in);
-		String mensaje;
-		
-		while(true) {
-			mensaje = s.nextLine();
+		while(bandera) {
 			try {
-				servidor.mensaje(nombre + " : "+ mensaje);
+				servidor.mensaje("" + cliente.tam);
 			} catch(Exception e) {
 				e.printStackTrace();
+				System.out.println("ERROR ***********");
 			}
 		}
-		
 	}
 
 	@Override
 	public void mensajeCliente(String mensaje) throws RemoteException {
 		System.err.println(mensaje);
+		bandera = false;
 	}
 }

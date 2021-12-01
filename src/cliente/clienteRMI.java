@@ -14,10 +14,12 @@ public class clienteRMI {
 			String nombre = JOptionPane.showInputDialog("Ingresa tu nombre");
 			String nom = nombre;
 			
-			Registry rmii = LocateRegistry.getRegistry("localhost", 1005);
+			Registry rmii = LocateRegistry.getRegistry("192.168.0.11", 1005);
+			System.out.println("Hola " + nom);
 			
 			chatServidor servidor = (chatServidor) rmii.lookup("Chat");
-			new Thread(new implementacionClienteChat(nom, servidor)).start();
+			//new Thread(new implementacionClienteChat(nom, servidor)).start();
+			ClienteView cliente = new ClienteView(nom, servidor);
 		} catch(Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
