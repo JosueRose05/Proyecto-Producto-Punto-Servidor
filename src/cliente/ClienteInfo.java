@@ -1,20 +1,19 @@
 package cliente;
 
-import interfacee.chatServidor;
-import servidor.implementacionChat;
+import java.io.Serializable;
 
-public class ClienteInfo {
+import interfacee.chatCliente;
+
+public class ClienteInfo implements Serializable{
 	public String nombre;
 	public int tam;
 	public int[] vector;
 	public boolean is_ready;
-	public chatServidor servidor;
-	public implementacionClienteChat imp;
 	public int op; //0=secuencial, 1=fork, 2=exec
+	public chatCliente cliente;
 	
-	public ClienteInfo(String nombre, chatServidor servidor) {
+	public ClienteInfo(String nombre) {
 		this.nombre = nombre;
-		this.servidor = servidor;
 		this.is_ready = false;
 		this.tam = 1;
 	}
@@ -30,5 +29,6 @@ public class ClienteInfo {
 	public void set_op(int i) {
 		this.op = i;
 	}
+	
 	
 }

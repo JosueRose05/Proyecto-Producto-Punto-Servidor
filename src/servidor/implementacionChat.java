@@ -8,16 +8,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
 
 import cliente.ClienteInfo;
+import cliente.implementacionClienteChat;
 import interfacee.chatCliente;
 import interfacee.chatServidor;
 
 public class implementacionChat extends UnicastRemoteObject implements chatServidor{
 
 	public ArrayList<ClienteInfo> clientes;
-	public float n1=0, n2=0;
-	public boolean n1_vacio=true, n2_vacio=true;
+	public static int cont = 0;
 	
-	public static double tiempo, resultado;
+	public static double tiempo, resultado_final;
 	
 	implementacionChat() throws RemoteException {
 		clientes = new ArrayList<ClienteInfo>();
@@ -26,19 +26,30 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
 	@Override
 	public void registro(ClienteInfo cliente) throws RemoteException {
 		this.clientes.add(cliente);
+		cont++;
 	}
 
 	@Override
 	public void mensaje(String mensaje) throws RemoteException {
-		int a = 0;
-		
-		if(clientes.size() >= 2) {
-			while(a < clientes.size()) {
-				//clientes.get(a++).mensajeCliente(mensaje);
-				String todo = tiempo + " " + resultado;
-				clientes.get(a++).imp.mensajeCliente(todo);
+		if(cont == 2) {
+			
+			int a = 0;
+			try {
+				clientes.get(0).cliente.set_v2(clientes.get(1).vector);
+				clientes.get(1).cliente.set_v2(clientes.get(0).vector);
+				while(a < 2) {
+					int o = clientes.get(a).op;
+					hacer_producto(o);
+					String todo = tiempo + " " + resultado_final;
+					clientes.get(a).cliente.mensajeCliente(todo);
+					a++;
+				}
+			} catch(Exception ex) {
+
 			}
+			
 			clientes.clear();
+			cont = 0;
 		}
 	}
 	
@@ -47,15 +58,19 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
             long inicio=0, fin=0;
             inicio=System.currentTimeMillis();
 
-            resultado = secuencial(clientes.get(0).vector, clientes.get(1).vector);
+            resultado_final = secuencial(clientes.get(0).vector, clientes.get(1).vector);
 
             fin = System.currentTimeMillis();
             tiempo=(double)(fin-inicio);
         }else if(op == 1){
             long inicio=0, fin=0;
             inicio=System.currentTimeMillis();
+            try {
+            	resultado_final =fork(clientes.get(0).vector, clientes.get(1).vector);
+            } catch(Exception ex) {
+            	System.out.println("Le dio amsieda");
+            }
             
-            resultado =fork(clientes.get(0).vector, clientes.get(1).vector);
             
             fin = System.currentTimeMillis();
             tiempo=(double)(fin-inicio);
@@ -63,7 +78,11 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
             long inicio=0, fin=0;
             inicio=System.currentTimeMillis();
             
-            resultado =executor(clientes.get(0).vector, clientes.get(1).vector);
+            try {
+            	resultado_final = executor(clientes.get(0).vector, clientes.get(1).vector);
+            } catch(Exception ex) {
+            	System.out.println("Le dio amsieda");
+            }
             
             fin = System.currentTimeMillis();
             tiempo=(double)(fin-inicio);

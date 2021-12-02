@@ -42,8 +42,7 @@ public class ClienteView extends JFrame implements ActionListener{
     	//Conexion
     	this.nombre = nombre;
     	this.servidor = servidor;
-    	this.cliente = new ClienteInfo(nombre, servidor);
-    	
+    	this.cliente = new ClienteInfo(nombre);
     	
     	//Vista
         setTitle("Producto Punto" + this.nombre);
@@ -184,6 +183,7 @@ public class ClienteView extends JFrame implements ActionListener{
 	            auxv1 = generar_arreglo(auxTam,V1text);
 	            this.cliente.vector = auxv1; //A�adimos el vector al cliente que se manda
 	            this.cliente.set_tam(auxTam);
+	            this.cliente.is_ready = true;
 	        }else{
 	            JOptionPane.showMessageDialog(null, "El tamaño de los vectores excede la memoria\n Intentalo de Nuevo","Atención!", JOptionPane.ERROR_MESSAGE); 
 	        }
@@ -194,35 +194,35 @@ public class ClienteView extends JFrame implements ActionListener{
 	        t3.setText("");
 	        System.gc(); 
 
-        }else if(e.getSource() == secuencial){
+        }else if(e.getSource() == secuencial && this.cliente.is_ready == true){
             System.gc();
             Restext.setText("");
             this.cliente.op = 0;
-            this.cliente.is_ready = true;
+            //this.cliente.is_ready = true;
             try {
-    			new Thread(new implementacionClienteChat(this.cliente, servidor)).start();
+    			new Thread(new implementacionClienteChat(this.cliente, servidor, t1, Restext, V2text)).start();
     		} catch (RemoteException ex) {
     			// TODO Auto-generated catch block
     			ex.printStackTrace();
     		}
-        }else if(e.getSource() == fork){
+        }else if(e.getSource() == fork && this.cliente.is_ready == true){
             System.gc();
             Restext.setText("");
             this.cliente.op = 1;
-            this.cliente.is_ready = true;
+            //this.cliente.is_ready = true;
             try {
-    			new Thread(new implementacionClienteChat(this.cliente, servidor)).start();
+    			new Thread(new implementacionClienteChat(this.cliente, servidor, t2, Restext, V2text)).start();
     		} catch (RemoteException ex) {
     			// TODO Auto-generated catch block
     			ex.printStackTrace();
     		}
-        }else if(e.getSource() == executor){
+        }else if(e.getSource() == executor && this.cliente.is_ready == true){
             System.gc();
             Restext.setText("");
             this.cliente.op = 2;
-            this.cliente.is_ready = true;
+            //this.cliente.is_ready = true;
             try {
-    			new Thread(new implementacionClienteChat(this.cliente, servidor)).start();
+    			new Thread(new implementacionClienteChat(this.cliente, servidor, t3, Restext, V2text)).start();
     		} catch (RemoteException ex) {
     			// TODO Auto-generated catch block
     			ex.printStackTrace();
