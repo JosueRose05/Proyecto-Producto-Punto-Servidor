@@ -22,7 +22,7 @@ public class clienteRMI {
 			ClienteView cliente = new ClienteView(nom, servidor);
 		} catch(Exception ex) {
 			System.out.println(ex.getMessage());
-			ex.printStackTrace();
+			ex.printStackTrace(); //Hola
 		}
 	}
 }
